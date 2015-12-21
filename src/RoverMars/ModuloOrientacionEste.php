@@ -49,6 +49,6 @@ class ModuloOrientacionEste implements ModuloOrientacion
      */
     public function haciaDondeNosDirigimos()
     {
-        return 'Este';
+        return SistemaNavegacion::ESTE;
     }
 }

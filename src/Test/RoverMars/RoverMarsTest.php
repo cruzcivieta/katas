@@ -142,15 +142,15 @@ class RoverMarsTest extends \PHPUnit_Framework_TestCase
         $mars->ejecutar(['l', 'l', 'b']);
         $this->assertTrue($mars->estasEn($posicionEsperada));
     }
-//
-//    public function testAtravesarLimiteNorteAparecemosEnElLimiteSur()
-//    {
-//        $limiteSur = [0, -5];
-//        $mars = $this->crearRoverEn00Norte();
-//
-//        $mars->ejecutar(['f', 'f', 'f', 'f', 'f', 'f']);
-//        $this->assertEquals($limiteSur, $mars->dondeEstas(), 'Rover mars ha dado la vuelta al planeta');
-//    }
+
+    public function testAtravesarLimiteNorteAparecemosEnElLimiteSur()
+    {
+        $limiteSur = new Posicion(0, -5);
+        $mars = $this->crearRoverEn00Norte();
+
+        $mars->ejecutar(['f', 'f', 'f', 'f', 'f', 'f']);
+        $this->assertTrue($mars->estasEn($limiteSur), 'Rover mars ha dado la vuelta al planeta');
+    }
 
     private function crearRoverEn00Norte()
     {

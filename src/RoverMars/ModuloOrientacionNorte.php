@@ -48,6 +48,6 @@ class ModuloOrientacionNorte implements ModuloOrientacion
      */
     public function haciaDondeNosDirigimos()
     {
-        return 'Norte';
+        return SistemaNavegacion::NORTE;
     }
 }
