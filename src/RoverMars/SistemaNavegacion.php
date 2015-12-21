@@ -8,7 +8,7 @@
 namespace RoverMars;
 
 
-class SistemaNavegacion
+class SistemaNavegacion implements ModuloOrientacion
 {
     const ORIENTACION_INICIAL = 0;
     const PUNTOS_CARDINALES = [self::NORTE, self::ESTE, self::SUR, self::OESTE];
@@ -20,20 +20,19 @@ class SistemaNavegacion
     const OESTE = 'Oeste';
 
     private $orientacion = SistemaNavegacion::ORIENTACION_INICIAL;
-    private $sistemaDireccion;
+    private $moduloOrientacion;
 
     /**
-     * SistemaNavegacion constructor.
+     * @param ModuloOrientacion $modulo
      */
-    public function __construct()
+    public function __construct($modulo = null)
     {
-        $this->sistemaDireccion = new SistemaDireccion();
+        $this->moduloOrientacion = new ModuloOrientacionNorte();
     }
 
     public function haciaDondeNosDirigimos()
     {
-        $puntosCardinales = SistemaNavegacion::PUNTOS_CARDINALES;
-        return $puntosCardinales[$this->orientacion];
+        return $this->moduloOrientacion->haciaDondeNosDirigimos();
     }
 
     public function girarDerecha()
@@ -52,14 +51,36 @@ class SistemaNavegacion
         $this->orientacion %= count(SistemaNavegacion::PUNTOS_CARDINALES) ;
     }
 
-    public function avanzar(&$posicion)
+    /**
+     * @return ModuloOrientacion
+     */
+    public function girarSentidoHorario()
     {
-        if ($this->haciaDondeNosDirigimos() === static::ESTE) {
-            $posicion[0] += 1;
-        } elseif ($this->haciaDondeNosDirigimos() === static::OESTE) {
-            $posicion[0] -= 1;
-        } else {
-            $posicion[1] += 1;
-        }
+        $this->moduloOrientacion = $this->moduloOrientacion->girarSentidoHorario();
     }
+
+    /**
+     * @return ModuloOrientacion
+     */
+    public function girarSentidoAntihorario()
+    {
+        $this->moduloOrientacion = $this->moduloOrientacion->girarSentidoAntihorario();
+    }
+
+    /**
+     * @param Posicion $posicion
+     */
+    public function avanzar(Posicion $posicion)
+    {
+        $this->moduloOrientacion->avanzar($posicion);
+    }
+
+    /**
+     * @param Posicion $posicion
+     */
+    public function retroceder(Posicion $posicion)
+    {
+        $this->moduloOrientacion->retroceder($posicion);
+    }
+
 }

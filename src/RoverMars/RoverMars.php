@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
+
  * User: dcruz
  * Date: 28/11/15
  * Time: 19:47
@@ -25,7 +25,7 @@ class RoverMars
      */
     public function __construct()
     {
-        $this->posicion = RoverMars::ORIGIN;
+        $this->posicion = new Posicion();
         $this->sistemaNavegacion = new SistemaNavegacion();
     }
 
@@ -41,6 +41,11 @@ class RoverMars
         return $this->posicion;
     }
 
+    public function estasEn(Posicion $posicion)
+    {
+        return $this->posicion->esIgual($posicion);
+    }
+
     public function haciaDondeNosDirigimos()
     {
         return $this->sistemaNavegacion->haciaDondeNosDirigimos();
@@ -51,21 +56,21 @@ class RoverMars
         $acciones = [
             RoverMars::AVANZAR => [$this, 'avanzar'],
             RoverMars::RETROCEDER => [$this, 'retroceder'],
-            RoverMars::GIRAR_DERECHA => [$this, 'girarDerecha'],
-            RoverMars::GIRAR_IZQUIERDA => [$this, 'girarIzquierda'],
+            RoverMars::GIRAR_DERECHA => [$this, 'girarSentidoHorario'],
+            RoverMars::GIRAR_IZQUIERDA => [$this, 'girarSentidoAntihorario'],
         ];
 
         call_user_func($acciones[$comando]);
     }
 
-    private function girarDerecha()
+    private function girarSentidoHorario()
     {
-        $this->sistemaNavegacion->girarDerecha();
+        $this->sistemaNavegacion->girarSentidoHorario();
     }
 
-    private function girarIzquierda()
+    private function girarSentidoAntihorario()
     {
-        $this->sistemaNavegacion->girarIzquierda();
+        $this->sistemaNavegacion->girarSentidoAntihorario();
     }
 
     private function avanzar()
@@ -75,10 +80,6 @@ class RoverMars
 
     private function retroceder()
     {
-        if ($this->sistemaNavegacion->haciaDondeNosDirigimos() === 'Este') {
-            $this->posicion[0] -= 1;
-        } else {
-            $this->posicion[1] -= 1;
-        }
+        $this->sistemaNavegacion->retroceder($this->posicion);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
+
  * User: dcruz
  * Date: 28/11/15
  * Time: 19:42
@@ -9,6 +9,7 @@
 namespace Test\RoverMars;
 
 
+use RoverMars\Posicion;
 use RoverMars\RoverMars;
 use RoverMars\SistemaNavegacion;
 
@@ -16,28 +17,28 @@ class RoverMarsTest extends \PHPUnit_Framework_TestCase
 {
     public function testRoverComienzaEn00MirandoAlNorte()
     {
-        $posicionInicial = [0,0];
+        $posicionInicial = new Posicion();
         $roverMars = $this->crearRoverEn00Norte();
 
-        $this->assertEquals($posicionInicial, $roverMars->dondeEstas(), 'Rover comienza en el 0,0,N');
+        $this->assertTrue($roverMars->estasEn($posicionInicial), 'Rover comienza en el 0,0,N');
     }
 
     public function testAvanzarUnaCasillaAlNorte()
     {
-        $pasoHaciaElNorte = [0,1];
+        $pasoHaciaElNorte = new Posicion(0, 1);
         $mars = $this->crearRoverEn00Norte();
 
         $mars->ejecutar(['f']);
-        $this->assertEquals($pasoHaciaElNorte, $mars->dondeEstas(), 'Rover se mueve un paso hacia el norte');
+        $this->assertTrue($mars->estasEn($pasoHaciaElNorte), 'Rover se mueve un paso hacia el norte');
     }
 
     public function testRetrocederUnaCasillaMirandoAlNorte()
     {
-        $pasoHaciaElSur= [0,-1];
+        $pasoHaciaElSur = new Posicion(0, -1);
         $mars = $this->crearRoverEn00Norte();
 
         $mars->ejecutar(['b']);
-        $this->assertEquals($pasoHaciaElSur, $mars->dondeEstas(), 'Rover se mueve un paso hacia atrás mirando al norte');
+        $this->assertTrue($mars->estasEn($pasoHaciaElSur), 'Rover se mueve un paso hacia atrás mirando al norte');
     }
 
     public function testRoverMiraAlNorte()
@@ -90,31 +91,58 @@ class RoverMarsTest extends \PHPUnit_Framework_TestCase
 
     public function testAvanzaUnaCasillaHaciaElEste()
     {
-        $posicionEsperada = [1,0];
+        $posicionEsperada = new Posicion(1, 0);
         $mars = $this->crearRoverEn00Norte();
 
         $mars->ejecutar(['r', 'f']);
-        $this->assertEquals($posicionEsperada, $mars->dondeEstas());
+        $this->assertTrue($mars->estasEn($posicionEsperada));
     }
 
     public function testRetrocedeUnaCasillaHaciaElEste()
     {
-        $posicionEsperada = [-1,0];
+        $posicionEsperada = new Posicion(-1, 0);
         $mars = $this->crearRoverEn00Norte();
 
         $mars->ejecutar(['r', 'b']);
-        $this->assertEquals($posicionEsperada, $mars->dondeEstas());
+        $this->assertTrue($mars->estasEn($posicionEsperada));
     }
 
     public function testAvanzaUnaCasillaHaciaElOEste()
     {
-        $posicionEsperada = [-1,0];
+        $posicionEsperada = new Posicion(-1, 0);
         $mars = $this->crearRoverEn00Norte();
 
         $mars->ejecutar(['l', 'f']);
-        $this->assertEquals($posicionEsperada, $mars->dondeEstas());
+        $this->assertTrue($mars->estasEn($posicionEsperada));
     }
 
+    public function testRetrocedeUnaCasillaHaciaElOeste()
+    {
+        $posicionEsperada = new Posicion(1, 0);
+        $mars = $this->crearRoverEn00Norte();
+
+        $mars->ejecutar(['l', 'b']);
+        $this->assertTrue($mars->estasEn($posicionEsperada));
+    }
+
+    public function testAvanzaUnaCasillaHaciaElSur()
+    {
+        $posicionEsperada = new Posicion(0, -1);
+        $mars = $this->crearRoverEn00Norte();
+
+        $mars->ejecutar(['l', 'l', 'f']);
+        $this->assertTrue($mars->estasEn($posicionEsperada), 'Mars debe de caminar hacia atras mirando al sur');
+    }
+
+    public function testRetrocedeUnaCasillaHaciaElSur()
+    {
+        $posicionEsperada = new Posicion(0, 1);
+        $mars = $this->crearRoverEn00Norte();
+
+        $mars->ejecutar(['l', 'l', 'b']);
+        $this->assertTrue($mars->estasEn($posicionEsperada));
+    }
+//
 //    public function testAtravesarLimiteNorteAparecemosEnElLimiteSur()
 //    {
 //        $limiteSur = [0, -5];
