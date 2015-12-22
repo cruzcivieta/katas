@@ -3,6 +3,11 @@ Recopilatorio de katas
 
 Ejercicios de ejemplo para aprender TDD
 
+## Instalacion y ejecución de Tests
+
+    composer install
+    phpunit
+
 ## Enero
 
 String Calculator
