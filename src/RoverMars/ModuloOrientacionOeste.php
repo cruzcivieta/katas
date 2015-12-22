@@ -9,7 +9,7 @@
 namespace RoverMars;
 
 
-class ModuloOrientacionOeste implements ModuloOrientacion
+class ModuloOrientacionOeste extends AbstractoModuloOrientacion
 {
 
     /**
@@ -17,7 +17,7 @@ class ModuloOrientacionOeste implements ModuloOrientacion
      */
     public function girarSentidoHorario()
     {
-        return new ModuloOrientacionNorte();
+        return new ModuloOrientacionNorte($this->mapaPlaneta);
     }
 
     /**
@@ -25,7 +25,7 @@ class ModuloOrientacionOeste implements ModuloOrientacion
      */
     public function girarSentidoAntihorario()
     {
-        return new ModuloOrientacionSur();
+        return new ModuloOrientacionSur($this->mapaPlaneta);
     }
 
     /**
@@ -33,7 +33,11 @@ class ModuloOrientacionOeste implements ModuloOrientacion
      */
     public function avanzar(Posicion $posicion)
     {
-        $posicion->reducirX();
+        if ($this->estoyEnElLimiteOeste($posicion)) {
+            $posicion->setX($this->mapaPlaneta->getLimiteEste());
+        } else {
+            $posicion->reducirX();
+        }
     }
 
     /**
@@ -41,7 +45,11 @@ class ModuloOrientacionOeste implements ModuloOrientacion
      */
     public function retroceder(Posicion $posicion)
     {
-        $posicion->incrementarX();
+        if ($this->estoyEnElLimiteEste($posicion)) {
+            $posicion->setX($this->mapaPlaneta->getLimiteOeste());
+        } else {
+            $posicion->incrementarX();
+        }
     }
 
     /**

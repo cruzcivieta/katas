@@ -68,6 +68,22 @@ class Posicion
     }
 
     /**
+     * @param int $x
+     */
+    public function setX($x)
+    {
+        $this->x = $x;
+    }
+
+    /**
+     * @param int $y
+     */
+    public function setY($y)
+    {
+        $this->y = $y;
+    }
+
+    /**
      * @return array
      */
     public function toArray()

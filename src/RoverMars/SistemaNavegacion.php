@@ -8,6 +8,8 @@
 namespace RoverMars;
 
 
+use RoverMars\Exception\ObstaculoEncontradoException;
+
 class SistemaNavegacion implements ModuloOrientacion
 {
     const NORTE = 'Norte';
@@ -15,14 +17,20 @@ class SistemaNavegacion implements ModuloOrientacion
     const SUR = 'Sur';
     const OESTE = 'Oeste';
 
+    /**
+     * @var ModuloOrientacion
+     */
     private $moduloOrientacion;
+    private $mapaPlaneta;
 
     /**
+     * @param MapaPlaneta $mapaPlaneta
      * @param ModuloOrientacion $modulo
      */
-    public function __construct($modulo = null)
+    public function __construct(MapaPlaneta $mapaPlaneta, ModuloOrientacion $modulo)
     {
-        $this->moduloOrientacion = new ModuloOrientacionNorte();
+        $this->mapaPlaneta = $mapaPlaneta;
+        $this->moduloOrientacion = $modulo;
     }
 
     public function haciaDondeNosDirigimos()
@@ -48,18 +56,32 @@ class SistemaNavegacion implements ModuloOrientacion
 
     /**
      * @param Posicion $posicion
+     * @throws ObstaculoEncontradoException
      */
     public function avanzar(Posicion $posicion)
     {
         $this->moduloOrientacion->avanzar($posicion);
+
+        $obstaculo = $this->mapaPlaneta->hayObstaculoEn($posicion);
+        if ($obstaculo) {
+            $this->moduloOrientacion->retroceder($posicion);
+            throw new ObstaculoEncontradoException($obstaculo);
+        }
     }
 
     /**
      * @param Posicion $posicion
+     * @throws ObstaculoEncontradoException
      */
     public function retroceder(Posicion $posicion)
     {
         $this->moduloOrientacion->retroceder($posicion);
+
+        $obstaculo = $this->mapaPlaneta->hayObstaculoEn($posicion);
+        if ($obstaculo) {
+            $this->moduloOrientacion->avanzar($posicion);
+            throw new ObstaculoEncontradoException($obstaculo);
+        }
     }
 
 }

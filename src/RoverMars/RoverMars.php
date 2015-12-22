@@ -23,10 +23,10 @@ class RoverMars
     /**
      * RoverMars constructor.
      */
-    public function __construct()
+    public function __construct(MapaPlaneta $mapaPlaneta)
     {
         $this->posicion = new Posicion();
-        $this->sistemaNavegacion = new SistemaNavegacion();
+        $this->sistemaNavegacion = new SistemaNavegacion($mapaPlaneta, new ModuloOrientacionNorte($mapaPlaneta));
     }
 
     public function ejecutar($comandos)
@@ -60,7 +60,7 @@ class RoverMars
             RoverMars::GIRAR_IZQUIERDA => [$this, 'girarSentidoAntihorario'],
         ];
 
-        call_user_func($acciones[$comando]);
+        return call_user_func($acciones[$comando]);
     }
 
     private function girarSentidoHorario()
